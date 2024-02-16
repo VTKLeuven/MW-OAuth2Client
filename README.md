@@ -1,11 +1,15 @@
-# MediaWiki OAuth2 Client
+# MediaWiki OAuth2 Client Customized for VTK Wiki
 MediaWiki implementation of the PHP League's [OAuth2 Client](https://github.com/thephpleague/oauth2-client), to allow MediaWiki to act as a client to any OAuth2 server. Currently maintained by [Schine GmbH](https://www.star-made.org/).
 
 Requires MediaWiki 1.25+.
 
 ## Installation
 
-Clone this repo into the extension directory. In the cloned directory, run 'git submodule update --init' to initialize the local configuration file and fetch all data from the OAuth2 client library.
+Clone this repo into the extension directory. In the cloned directory, run
+```
+git submodule update --init
+``` 
+to initialize the local configuration file and fetch all data from the OAuth2 client library.
 
 Finally, run [composer](https://getcomposer.org/) in /vendors/oauth2-client to install the library dependency.
 
@@ -34,6 +38,7 @@ $wgOAuth2Client['configuration']['redirect_uri']           = ''; // URL for OAut
 
 $wgOAuth2Client['configuration']['username'] = 'username'; // JSON path to username
 $wgOAuth2Client['configuration']['email'] = 'email'; // JSON path to email
+$wgOAuth2Client['configuration']['real_name'] = 'full_name'; // JSON path to full name
 ```
 
 The JSON path should be set to point to the appropriate attributes in the JSON.
@@ -47,6 +52,7 @@ For example, if user JSON is
     "user": {
         "username": "my username",
         "email": "my email"
+        "full_name": "my name"
     }
 }
 ```
@@ -56,6 +62,7 @@ Then your JSON path configuration should be these
 ```
 $wgOAuth2Client['configuration']['username'] = 'user.username'; // JSON path to username
 $wgOAuth2Client['configuration']['email'] = 'user.email'; // JSON path to email
+$wgOAuth2Client['configuration']['real_name'] = 'user.full_name'; // JSON path to full name
 ```
 
 You can see [Json Helper Test case](./tests/phpunit/JsonHelperTest.php) for more.
@@ -81,14 +88,10 @@ $wgOAuth2Client['configuration']['service_login_link_text'] = 'Login with StarMa
 Optional Authorization Callback
 
 Provide a callback and error message in the configuration that evaluates a conditional based upon the result of some business logic provided by the authorization endpoint response.
-
+Included responses are 'university_status', 'organization_status' and 'in_workinggroup'.
 ```
 $wgOAuth2Client['configuration']['authz_callback'] = function($response) {
-  if ($response['property']) {
-    return true;
-  } else {
-    return false;
-  }
+  return $response['organization_status'] === 'praesidium';
 }; // return true or false based on something from the authorization response
 $wgOAuth2Client['configuration']['authz_failure_message'] // text of error message
 ```
