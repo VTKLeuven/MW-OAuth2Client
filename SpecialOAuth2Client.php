@@ -173,6 +173,7 @@ class SpecialOAuth2Client extends SpecialPage {
 		}
 
 		$username = JsonHelper::extractValue($response, $wgOAuth2Client['configuration']['username']);
+		$realname = JsonHelper::extractValue($response, $wgOAuth2Client['configuration']['real_name']);
 		$email =  JsonHelper::extractValue($response, $wgOAuth2Client['configuration']['email']);
 		Hooks::run("OAuth2ClientBeforeUserSave", [&$username, &$email, $response]);
 		$user = User::newFromName($username, 'creatable');
@@ -180,7 +181,7 @@ class SpecialOAuth2Client extends SpecialPage {
 			throw new MWException('Could not create user with username:' . $username);
 			die();
 		}
-		$user->setRealName($username);
+		$user->setRealName($realname);
 		$user->setEmail($email);
 		$user->load();
 		if ( !( $user instanceof User && $user->getId() ) ) {
