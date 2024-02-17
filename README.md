@@ -82,6 +82,7 @@ $wgOAuth2Client['configuration']['scopes'] = 'read_citizen_info'; //Permissions
 
 $wgOAuth2Client['configuration']['service_name'] = 'Citizen Registry'; // the name of your service
 $wgOAuth2Client['configuration']['service_login_link_text'] = 'Login with StarMade'; // the text of the login link
+$wgOAuth2Client['configuration']['check_state'] = false // Dont check the state parameter for oauth2
 
 ```
 

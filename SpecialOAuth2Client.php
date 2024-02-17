@@ -97,11 +97,16 @@ class SpecialOAuth2Client extends SpecialPage {
 		try {
 			$storedState = $wgRequest->getSession()->get('oauth2state');
 			// Enforce the `state` parameter to prevent clickjacking/CSRF
-			if(isset($storedState) && $storedState != $_GET['state']) {
-				if(isset($_GET['state'])) {
-					throw new UnexpectedValueException("State parameter of callback does not match original state");
-				} else {
-					throw new UnexpectedValueException("Required state parameter missing");
+			if (
+				!isset($wgOAuth2Client['configuration']['check_state'])
+				|| false === $wgOAuth2Client['configuration']['check_state']
+			) {
+				if (isset($storedState) && $storedState != $_GET['state']) {
+					if (isset($_GET['state'])) {
+						throw new UnexpectedValueException("State parameter of callback does not match original state");
+					} else {
+						throw new UnexpectedValueException("Required state parameter missing");
+					}
 				}
 			}
 
